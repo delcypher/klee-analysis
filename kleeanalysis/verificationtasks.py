@@ -10,7 +10,7 @@ def __fail_generator(spec: "A failure specification", failures: "An iterable lis
 				allowed_failures[loc["file"]].add(int(loc["line"]))
 	if spec["correct"] and len(allowed_failures) > 0:
 		raise Exception("A failure that must not happen, but has counterexamples makes no sense")
-	return (fail for fail in failures if fail.error.file not in allowed_failures or fail.error.line not in allowed_failures[fail.error.file])
+	return (fail.error for fail in failures if fail.error.file not in allowed_failures or fail.error.line not in allowed_failures[fail.error.file])
 
 TASKS = {
 	"no_assert_fail": lambda spec, kleedir: __fail_generator(spec, kleedir.assertion_failures),

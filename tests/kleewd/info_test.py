@@ -1,21 +1,21 @@
 """
-unit tests for the kleeparser.kleedir.Info class
+unit tests for the kleeanalysis.kleedir.Info class
 """
 
 import unittest
 import os
 from datetime import datetime, timedelta
 
-from ..context import kleeparser
+from ..context import kleeanalysis
 from ..context import TEST_RUNNERDIR
 
 class TestInfoMembers(unittest.TestCase):
 	"""
-	Test the kleeparser.RunnerDirectory class members
+	Test the kleeanalysis.RunnerDirectory class members
 	"""
 	@classmethod
 	def setUpClass(cls):
-		cls.info = kleeparser.kleedir.info.Info(os.path.join(TEST_RUNNERDIR, "klee-wd", "info"))
+		cls.info = kleeanalysis.kleedir.info.Info(os.path.join(TEST_RUNNERDIR, "klee-wd", "info"))
 
 	def test_member_empty(self):
 		"""Test the "empty" member"""

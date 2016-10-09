@@ -1,5 +1,5 @@
 """
-The exceptions module contains all kleeparser exceptions
+The exceptions module contains all kleeanalysis exceptions
 """
 
 class Error(Exception):
