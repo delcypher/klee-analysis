@@ -29,6 +29,9 @@ class Batch:
 				spec = yaml_load(file)
 			result["spec"] = spec
 			failures = []
+			misc_failures = list(kleedir.misc_errors)
+			if len(misc_failures) > 0:
+				failures.append(VerificationFailure("no_misc_failures", misc_failures))
 			for name, task in TASKS.items():
 				task_failures = list(task(spec["verification_tasks"][name], kleedir))
 				if len(task_failures) > 0:

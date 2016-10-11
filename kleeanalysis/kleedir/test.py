@@ -2,6 +2,7 @@
 
 import os
 import re
+import glob
 from collections import namedtuple
 from ..exceptions import InputError
 
@@ -57,29 +58,53 @@ class Test:
 		division -- division error info (None if it did not happen)
 	"""
 
-	def __mkerror(self, name, suffix):
-		"""load error file if it exists and add an attribute for it"""
-		error = _parse_error(self.__pathstub + suffix)
-		self.__dict__[name] = error
-		if error is not None:
-			assert self.error is None
-			self.error = error
-
 	def __init__(self, path: "path to the klee working directory", identifier: "numeric identifier"):
 		"""Load a KLEE test case"""
-		self.__pathstub = os.path.join(path, "test{:06}".format(identifier))
-		self.error = None
+		self.identifier = identifier
+		self.__pathstub = os.path.join(path, "test{:06}".format(self.identifier))
 		self.early = _parse_early(self.__pathstub + ".early")
-		self.__mkerror("execution_error", ".exec.err")
-		self.__mkerror("abort", ".abort.err")
-		self.__mkerror("division", ".div.err")
-		self.__mkerror("assertion", ".assert.err")
-		self.__mkerror("free", ".free.err")
-		self.__mkerror("ptr", ".ptr.err")
-		self.__mkerror("overshift", ".overshift.err")
-		self.__mkerror("readonly_error", ".readonly.err")
-		self.__mkerror("user_error", ".user.err")
-		self.__mkerror("overflow", ".overflow.err")
+		self.error = None
+		self.execution_error = None
+		self.abort = None
+		self.division = None
+		self.assertion = None
+		self.free = None
+		self.ptr = None
+		self.overshift = None
+		self.readonly_error = None
+		self.user_error = None
+		self.overflow = None
+		self.misc_error = None
+		error = glob.glob(glob.escape(self.__pathstub) + ".*.err")
+		if len(error) > 1:
+			raise Exception("Only one error case per path?!")
+		if len(error) == 1:
+			error = error[0]
+			self.error = _parse_error(error)
+			error = error[:-4]
+			error = error[error.rfind(".")+1:]
+			if error == "exec":
+				self.execution_error = self.error
+			elif error == "abort":
+				self.abort = self.error
+			elif error == "div":
+				self.division = self.error
+			elif error == "assert":
+				self.assertion = self.error
+			elif error == "free":
+				self.free = self.error
+			elif error == "ptr":
+				self.ptr = self.error
+			elif error == "overshift":
+				self.overshift = self.error
+			elif error == "readonly":
+				self.readonly_error = self.error
+			elif error == "user":
+				self.user_error = self.error
+			elif error == "overflow":
+				self.overflow = self.error
+			else:
+				self.misc_error = self.error
 
 	@property
 	def ktest_path(self):

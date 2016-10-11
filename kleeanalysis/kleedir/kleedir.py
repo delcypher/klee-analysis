@@ -66,3 +66,8 @@ class KleeDir:
 	def overshifts(self):
 		"""Returns all execution failures"""
 		return (test for test in self.tests if test.overshift is not None)
+
+	@property
+	def misc_errors(self):
+		"""Returns all uncategorized failures"""
+		return (test for test in self.tests if test.misc_error is not None)
