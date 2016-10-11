@@ -11,6 +11,15 @@ def main(argv):
 	for result in batch.results:
 		failure_found = False
 		kleedir = result["klee_dir"]
+		if result["exit_code"] is not None and result["exit_code"] != 0:
+			failure_found = True
+			print(kleedir.path, "terminated with exit code", result["exit_code"])
+		if result["out_of_memory"]:
+			failure_found = True
+			print(kleedir.path, "killed due to running out of memory")
+		if result["backend_timeout"]:
+			failure_found = True
+			print(kleedir.path, "killed due to running out allotted time")
 		if not kleedir.is_valid:
 			failure_found = True
 			print(kleedir.path, "is not valid")
