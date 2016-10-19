@@ -5,6 +5,9 @@ import re
 import glob
 from collections import namedtuple
 from ..exceptions import InputError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 def _force_match(regex, line, message, path):
 	match = regex.fullmatch(line)
@@ -62,6 +65,7 @@ class Test:
 		"""Load a KLEE test case"""
 		self.identifier = identifier
 		self.__pathstub = os.path.join(path, "test{:06}".format(self.identifier))
+		_logger.debug('Creating test with pathstub "{}"'.format(self.__pathstub))
 		self.early = _parse_early(self.__pathstub + ".early")
 		self.error = None
 		self.execution_error = None

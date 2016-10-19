@@ -1,6 +1,9 @@
 """Represent KLEE working directories"""
 
 import os
+import logging
+
+_logger = logging.getLogger(__name__)
 
 from .info import Info
 from .test import Test
@@ -13,6 +16,7 @@ class KleeDir:
 		"""
 		Open a KLEE working directory.
 		"""
+		_logger.debug('Creating KleeDir from "{}"'.format(path))
 		self.path = path
 		try:
 			self.info = Info(os.path.join(path, "info"))

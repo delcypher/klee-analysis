@@ -3,6 +3,9 @@
 from collections import namedtuple
 from .kleedir import KleeDir
 from .verificationtasks import TASKS
+import logging
+
+_logger = logging.getLogger(__name__)
 
 def get_yaml_load():
 	"""Acquires the yaml load function"""
@@ -20,6 +23,7 @@ class Batch:
 	"""A whole klee-runner batch"""
 
 	def __init__(self, path):
+		_logger.debug('Creating Batch from "{}"'.format(path))
 		with open(path) as file:
 			self.results = yaml_load(file)["results"]
 		for result in self.results:

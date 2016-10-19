@@ -2,11 +2,24 @@
 
 from argparse import ArgumentParser
 from kleeanalysis import Batch
+import logging
+
+_logger = logging.getLogger(__name__)
 
 def main(argv):
 	parser = ArgumentParser(description="Perform verification of a klee-runner result yaml file and associated working directory")
 	parser.add_argument("path", help="path to the .yml file")
+	parser.add_argument("-l","--log-level",type=str, default="info", dest="log_level", choices=['debug','info','warning','error'])
+
 	args = parser.parse_args(args=argv)
+
+	logLevel = getattr(logging, args.log_level.upper(),None)
+	if logLevel == logging.DEBUG:
+		logFormat = '%(levelname)s:%(threadName)s: %(filename)s:%(lineno)d %(funcName)s()  : %(message)s'
+	else:
+		logFormat = '%(levelname)s:%(threadName)s: %(message)s'
+
+	logging.basicConfig(level=logLevel, format=logFormat)
 	batch = Batch(args.path)
 	for result in batch.results:
 		failure_found = False

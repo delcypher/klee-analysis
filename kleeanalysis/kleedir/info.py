@@ -5,6 +5,9 @@ Parse one of KLEEs "info" files
 import re
 from datetime import datetime, timedelta
 from ..exceptions import InputError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class Info:
 	"""
@@ -48,6 +51,7 @@ class Info:
 
 	def __init__(self, path: "Path to a KLEE info file."):
 		"""Open a KLEE "info" file."""
+		_logger.debug('Creating Info from "{}"'.format(path))
 		with open(path) as infofile:
 			line = infofile.readline()
 			if len(line) == 0:
